@@ -611,7 +611,14 @@ export class WhatsAppClient {
       },
     );
 
-    this.sock.ev.on('connection.update', ({ connection, lastDisconnect }) => {
+    this.sock.ev.on('connection.update', ({ connection, lastDisconnect, qr }) => {
+      if (qr) {
+        process.stderr.write('\n=== WHATSAPP QR CODE ===\n');
+        process.stderr.write(qr + '\n');
+        process.stderr.write('========================\n');
+        process.stderr.write('Escaneie o QR code acima com o app do WhatsApp no seu celular.\n\n');
+        writeFileSync('/tmp/whatsapp-qr.txt', qr);
+      }
       if (connection === 'open') {
         log('info', 'Connection open');
         this.connectionOpen = true;
